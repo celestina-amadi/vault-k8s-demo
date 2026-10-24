@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ACT 3 (bonus) — Dynamic MySQL credentials on Cloud SQL (~5 min)
 # Needs act2 to have run first (it enables KV and Kubernetes auth).
-source "$(dirname "$0")/lib.sh"
+source "$(dirname "$0")/../scripts/lib.sh"
 require_vault
 
 SQL_IP="$(state sql-ip)"

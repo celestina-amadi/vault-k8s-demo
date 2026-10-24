@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ACT 1 — The Base64 reality check (~3 min)
-source "$(dirname "$0")/lib.sh"
+source "$(dirname "$0")/../scripts/lib.sh"
 
 say "A perfectly normal Kubernetes Secret, the kind that lives in Git"
 step cat manifests/act1-k8s-secret.yaml
