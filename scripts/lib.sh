@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Shared helpers for the setup and on-stage scripts.
+# Shared helpers for the setup scripts and the acts.
 set -euo pipefail
 
-DEMO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DEMO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$DEMO_DIR"
 source "$DEMO_DIR/config.env"
 
@@ -23,11 +23,11 @@ require_vault() {
   local rc=0
   vault status >/dev/null 2>&1 || rc=$?
   if [[ $rc == 1 ]]; then
-    echo "Can't reach Vault at $VAULT_ADDR. Start the tunnel in another tab: ./tunnel.sh" >&2
+    echo "Can't reach Vault at $VAULT_ADDR. Start the tunnel in another tab: ./scripts/tunnel.sh" >&2
     exit 1
   fi
   if [[ $rc == 2 ]]; then
-    echo "Vault is sealed. Run ./unseal.sh" >&2
+    echo "Vault is sealed. Run ./scripts/unseal.sh" >&2
     exit 1
   fi
 }
@@ -43,7 +43,7 @@ mysql_admin() {
 say() { printf '\n\033[1;36m# %s\033[0m\n' "$*"; }
 
 # Print a command in yellow, wait for Enter, then run it.
-# AUTO=1 ./act2-vault-kv-injector.sh runs without pauses (for rehearsals).
+# AUTO=1 ./acts/act2-vault-kv-injector.sh runs without pauses.
 step() {
   printf '\n\033[1;33m$ %s\033[0m' "$*"
   if [[ "${AUTO:-0}" != 1 ]]; then read -r -s; fi

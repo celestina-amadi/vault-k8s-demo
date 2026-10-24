@@ -2,7 +2,7 @@
 # Vault on a Compute Engine VM, outside the cluster, with no public IP. Reachable only from
 # inside the VPC (GKE nodes and pods, the Envoy gateway) and through IAP from your laptop.
 # It reaches the internet (to install Vault) through Cloud NAT.
-source "$(dirname "$0")/../lib.sh"
+source "$(dirname "$0")/../scripts/lib.sh"
 
 POD_CIDR="$(gcloud container clusters describe "$CLUSTER_NAME" --zone "$ZONE" --format='value(clusterIpv4Cidr)')"
 SUBNET_CIDR="$(gcloud compute networks subnets describe "$NETWORK" --region "$REGION" --format='value(ipCidrRange)')"
@@ -52,7 +52,7 @@ for _ in $(seq 1 60); do
   sleep 5
 done
 if [[ $rc == 1 ]]; then
-  echo "Vault did not become reachable through IAP. Check: ./tunnel.sh, and the VM's serial log." >&2
+  echo "Vault did not become reachable through IAP. Check: ./scripts/tunnel.sh, and the VM's serial log." >&2
   exit 1
 fi
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # One-shot setup, mirroring production: private GKE + Vault on a private VM + MySQL on Cloud SQL,
 # with the Vault UI served through Envoy Gateway.
-# Run it at least a day before the talk (Cloud SQL alone takes 5-10 minutes).
+# Takes about 25 minutes (Cloud SQL alone takes 5-10).
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -16,5 +16,5 @@ done
 ./setup/05-envoy-gateway.sh
 
 echo
-echo "Ready. In another tab: ./tunnel.sh"
-echo "Then rehearse: AUTO=1 ./act1-base64.sh && AUTO=1 ./act2-vault-kv-injector.sh && AUTO=1 ./act3-dynamic-db.sh"
+echo "Ready. In another tab: ./scripts/tunnel.sh"
+echo "Then run the walkthrough: AUTO=1 ./acts/act1-base64.sh && AUTO=1 ./acts/act2-vault-kv-injector.sh && AUTO=1 ./acts/act3-dynamic-db.sh"

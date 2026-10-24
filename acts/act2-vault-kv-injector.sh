@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ACT 2 — Vault KV + Kubernetes auth + Agent Injector into tmpfs (~10 min)
-source "$(dirname "$0")/lib.sh"
+source "$(dirname "$0")/../scripts/lib.sh"
 require_vault
 
 say "Vault runs on a VM outside the cluster. Only the Agent Injector runs in GKE."

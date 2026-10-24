@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Delete everything after the talk so it stops costing money.
+# Delete everything setup created, so it stops costing money.
 # Each step carries on if the resource is already gone. Override ZONE to clean up another zone:
-#   ZONE=us-central1-a ./teardown.sh
-cd "$(dirname "$0")"
+#   ZONE=us-central1-a ./scripts/teardown.sh
+cd "$(dirname "$0")/.."
 source config.env
 REGION="${ZONE%-*}"
 

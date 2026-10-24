@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Put everything back to "before the talk" state. Run between rehearsals and on the morning of the talk.
-# Needs ./tunnel.sh running in another tab.
+# Remove everything the acts created, so the walkthrough can run again from the start.
+# Needs ./scripts/tunnel.sh running in another tab.
 source "$(dirname "$0")/lib.sh"
 require_vault
 

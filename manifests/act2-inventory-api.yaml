@@ -25,7 +25,7 @@ spec:
       annotations:
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/role: "inventory-api"
-        # Re-read KV every 15s so a rotation shows up quickly on stage (default is 5m).
+        # Re-read KV every 15s so a rotation shows up quickly (default is 5m).
         vault.hashicorp.com/template-static-secret-render-interval: "15s"
 
         vault.hashicorp.com/agent-inject-secret-database.env: "secret/data/inventory-api/prod/database"

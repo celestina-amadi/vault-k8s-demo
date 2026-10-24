@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Network egress (Cloud NAT) and a private GKE Standard cluster: nodes have no public IPs.
 # kubectl uses the DNS endpoint (IAM-authenticated); the public IP endpoint accepts nobody.
-source "$(dirname "$0")/../lib.sh"
+source "$(dirname "$0")/../scripts/lib.sh"
 
 if [[ "$PROJECT_ID" == "your-gcp-project-id" ]]; then
   echo "Set PROJECT_ID in config.env first." >&2
@@ -23,7 +23,7 @@ SUBNET_CIDR="$(gcloud compute networks subnets describe "$NETWORK" --region "$RE
 
 if ! gcloud container clusters describe "$CLUSTER_NAME" --zone "$ZONE" >/dev/null 2>&1; then
   # --enable-dns-access: kubectl reaches the control plane through a DNS endpoint that checks
-  #   your Google identity (IAM), so it works from any network, including the venue Wi-Fi.
+  #   your Google identity (IAM), so it works from any network.
   # --master-authorized-networks: the IP endpoints only accept the VPC subnet (nodes, Vault VM).
   # --gateway-api=disabled: Envoy Gateway installs and manages the Gateway API CRDs itself.
   gcloud container clusters create "$CLUSTER_NAME" \
@@ -52,6 +52,6 @@ echo "Control plane private endpoint: $PRIVATE_ENDPOINT"
 # The injector webhook listens on 8080. On this cluster type the control plane reaches nodes
 # from inside the VPC, which GKE's own "-vms" firewall rule already allows on all ports.
 
-# Short context name so kubectx output looks clean on stage.
+# Short context name for readable kubectx output.
 kubectx vault-demo="$(kubectl config current-context)" 2>/dev/null || true
 kubectl get nodes -o wide

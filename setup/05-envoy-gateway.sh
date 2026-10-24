@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Envoy Gateway in GKE, exposing the Vault UI (running on the private VM) to your browser.
 # HTTPS with a self-signed certificate, and only from the IP ranges in VAULT_UI_ALLOWED_CIDRS.
-source "$(dirname "$0")/../lib.sh"
+source "$(dirname "$0")/../scripts/lib.sh"
 
 helm upgrade --install eg oci://docker.io/envoyproxy/gateway-helm \
   --version "$ENVOY_GATEWAY_VERSION" \

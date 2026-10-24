@@ -1,4 +1,4 @@
-# REFERENCE ONLY (shown on the "Production notes" slide, not used in the demo).
+# REFERENCE ONLY (not used in the demo).
 # A starting point for Vault on Compute Engine VMs: 3 nodes (one per zone, e.g. a regional
 # managed instance group), integrated Raft storage, TLS, and auto-unseal with Cloud KMS.
 # Review every value before use.

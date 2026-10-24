@@ -40,7 +40,7 @@ spec:
         vault.hashicorp.com/agent-requests-mem: "32Mi"
     spec:
       serviceAccountName: orders-api
-      # The shell loop ignores SIGTERM; don't make the audience wait 30s for a restart.
+      # The shell loop ignores SIGTERM; a short grace period avoids a 30s wait on restart.
       terminationGracePeriodSeconds: 2
       containers:
         - name: app

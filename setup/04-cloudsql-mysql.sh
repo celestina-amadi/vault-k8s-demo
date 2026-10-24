@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # MySQL 8.0 on Cloud SQL with a private IP only, for the dynamic-credentials demo.
-source "$(dirname "$0")/../lib.sh"
+source "$(dirname "$0")/../scripts/lib.sh"
 
 gcloud services enable sqladmin.googleapis.com servicenetworking.googleapis.com
 

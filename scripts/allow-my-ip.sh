@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Let the network you're on now (e.g. the venue Wi-Fi) reach the Vault UI.
-# Usage: ./allow-my-ip.sh            -> your current public IP only
-#        ./allow-my-ip.sh 1.2.3.4/32,5.6.7.0/24
+# Let the network you are on now reach the Vault UI.
+# Usage: ./scripts/allow-my-ip.sh            -> your current public IP only
+#        ./scripts/allow-my-ip.sh 1.2.3.4/32,5.6.7.0/24
 source "$(dirname "$0")/lib.sh"
 
 ALLOWED="${1:-$(curl -s https://api.ipify.org)/32}"
