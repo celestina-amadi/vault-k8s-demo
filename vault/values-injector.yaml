@@ -1,0 +1,10 @@
+# Helm values: Vault runs on a VM, so the cluster only gets the Agent Injector.
+# global.externalVaultAddr is set by setup/03-injector.sh from the VM's internal IP.
+server:
+  enabled: false
+
+injector:
+  enabled: true
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
+    limits:   { cpu: 250m, memory: 128Mi }

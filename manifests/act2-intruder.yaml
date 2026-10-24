@@ -1,0 +1,30 @@
+# Same namespace, same Vault role in the annotation, but a different ServiceAccount.
+# Vault refuses it: the role is bound to the inventory-api ServiceAccount only.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: intruder
+  namespace: inventory
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intruder
+  namespace: inventory
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: intruder }
+  template:
+    metadata:
+      labels: { app: intruder }
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "inventory-api"
+        vault.hashicorp.com/agent-inject-secret-database.env: "secret/data/inventory-api/prod/database"
+    spec:
+      serviceAccountName: intruder
+      containers:
+        - name: app
+          image: busybox:1.36
+          command: ["sh", "-c", "cat /vault/secrets/database.env; sleep 3600"]

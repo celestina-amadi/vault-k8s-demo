@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: inventory
+---
+# The pod's identity. Vault trusts this, not a password.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: inventory-api
+  namespace: inventory
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-api
+  namespace: inventory
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: inventory-api }
+  template:
+    metadata:
+      labels: { app: inventory-api }
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "inventory-api"
+        # Re-read KV every 15s so a rotation shows up quickly on stage (default is 5m).
+        vault.hashicorp.com/template-static-secret-render-interval: "15s"
+
+        vault.hashicorp.com/agent-inject-secret-database.env: "secret/data/inventory-api/prod/database"
+        vault.hashicorp.com/agent-inject-template-database.env: |
+          {{- with secret "secret/data/inventory-api/prod/database" -}}
+          export DB_HOST="{{ .Data.data.host }}"
+          export DB_PORT="{{ .Data.data.port }}"
+          export DB_USER="{{ .Data.data.username }}"
+          export DB_PASSWORD="{{ .Data.data.password }}"
+          {{- end }}
+
+        vault.hashicorp.com/agent-inject-secret-third-party.env: "secret/data/inventory-api/prod/third-party"
+        vault.hashicorp.com/agent-inject-template-third-party.env: |
+          {{- with secret "secret/data/inventory-api/prod/third-party" -}}
+          export SHIPPING_PROVIDER_KEY="{{ .Data.data.shipping_provider_key }}"
+          export EMAIL_API_KEY="{{ .Data.data.email_api_key }}"
+          {{- end }}
+
+        vault.hashicorp.com/agent-inject-secret-endpoints.env: "secret/data/inventory-api/prod/endpoints"
+        vault.hashicorp.com/agent-inject-template-endpoints.env: |
+          {{- with secret "secret/data/inventory-api/prod/endpoints" -}}
+          export LEDGER_URL="{{ .Data.data.ledger_url }}"
+          export FRAUD_CHECK_URL="{{ .Data.data.fraud_check_url }}"
+          {{- end }}
+
+        vault.hashicorp.com/agent-requests-cpu: "25m"
+        vault.hashicorp.com/agent-requests-mem: "32Mi"
+        vault.hashicorp.com/agent-limits-cpu: "100m"
+        vault.hashicorp.com/agent-limits-mem: "64Mi"
+    spec:
+      serviceAccountName: inventory-api
+      containers:
+        - name: app
+          image: busybox:1.36
+          # Stand-in for a real service: load config from RAM, print what it got (masked).
+          command: ["sh", "-c"]
+          args:
+            - |
+              while true; do
+                for f in /vault/secrets/*.env; do . "$f"; done
+                echo "[inventory-api] db=${DB_USER}@${DB_HOST}:${DB_PORT} password=<${#DB_PASSWORD} chars> provider_key=<${#SHIPPING_PROVIDER_KEY} chars, starts ${SHIPPING_PROVIDER_KEY%%_*}_...> ledger=${LEDGER_URL}"
+                sleep 15
+              done
+          resources:
+            requests: { cpu: 10m, memory: 16Mi }

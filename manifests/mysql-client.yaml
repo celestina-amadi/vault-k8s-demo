@@ -1,0 +1,19 @@
+# A MySQL client inside the cluster, used by the scripts for admin queries against Cloud SQL.
+# No credentials live here: the scripts pass the root password at exec time.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: db
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-client
+  namespace: db
+spec:
+  containers:
+    - name: mysql
+      image: mysql:8.0
+      command: ["sleep", "infinity"]
+      resources:
+        requests: { cpu: 10m, memory: 64Mi }

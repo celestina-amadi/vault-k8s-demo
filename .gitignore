@@ -1,0 +1,2 @@
+# Unseal key, root token and database passwords created by setup. Never commit these.
+.state/
